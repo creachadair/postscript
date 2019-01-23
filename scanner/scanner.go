@@ -203,8 +203,8 @@ func (s *Scanner) Float64() (float64, error) {
 //
 // String literals are stripped of their quotes and decoded.
 //
-// Comment tokens are stripped of their leading "%" and any leading and
-// trailing whitespace.
+// Comment tokens are stripped of all leading "%" as well as any leading and
+// trailing whitespace that remains after doing so.
 func (s *Scanner) String() string {
 	switch s.token {
 	case Decimal, Left, Name, Radix, Real, Right:
@@ -214,7 +214,7 @@ func (s *Scanner) String() string {
 	case ImmediateName:
 		return strings.TrimPrefix(s.Text(), "//")
 	case Comment:
-		return strings.TrimSpace(strings.TrimPrefix(s.Text(), "%"))
+		return strings.TrimSpace(strings.TrimLeft(s.Text(), "%"))
 	case LitString:
 		text := s.Text()
 		unquoted := text[1 : len(text)-1] // remove outer "(" and ")"

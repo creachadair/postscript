@@ -33,7 +33,7 @@ func TestRawTokens(t *testing.T) {
 		{"\t \t", nil},
 
 		// Comments should include their terminator.
-		{"% hello\n", []string{"% hello\n"}},
+		{"% hello\n%% goodbye", []string{"% hello\n", "%% goodbye"}},
 
 		// Somewhat unusually, comments can end with form-feed.
 		{"% hello\f % world\n ", []string{"% hello\f", "% world\n"}},
@@ -135,6 +135,9 @@ func TestString(t *testing.T) {
 
 		// Comments.
 		{"% foo\n% bar\f\n% baz\n ", []string{"foo", "bar", "baz"}},
+		{"%% I am the lizard king\n\n% I can do anything\f\n", []string{
+			"I am the lizard king", "I can do anything",
+		}},
 
 		// Numbers.
 		{"1.3 .0 2#1101 6.67e-11", []string{"1.3", ".0", "2#1101", "6.67e-11"}},
@@ -145,7 +148,7 @@ func TestString(t *testing.T) {
 			if i >= len(test.want) {
 				t.Errorf("Extra token %d: %v %#q", i, s.Type(), s.Text())
 			} else if got != test.want[i] {
-				t.Errorf("Token %d: got %v %#q, want %v", i, s.Type(), got, test.want[i])
+				t.Errorf("Token %d: got %v %#q, want %#q", i, s.Type(), got, test.want[i])
 			}
 		})
 	}
