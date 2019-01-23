@@ -116,7 +116,7 @@ func (s *Scanner) Next() error {
 				s.text.WriteByte(c)
 				return s.scanA85()
 			}
-			s.input.UnreadByte()
+			s.unget()
 			if c != '<' { // hex literal
 				return s.scanHex()
 			}
@@ -245,6 +245,11 @@ func (s *Scanner) byte() (byte, error) {
 	return b, err
 }
 
+func (s *Scanner) unget() {
+	s.input.UnreadByte()
+	s.end--
+}
+
 func (s *Scanner) scanComment() error {
 	for {
 		b, err := s.byte()
@@ -368,7 +373,7 @@ func (s *Scanner) scanNamelike(first byte) error {
 
 		// Any self-delimiting marker terminates the name.
 		if isSpace(b) || isSpecial(b) {
-			s.input.UnreadByte()
+			s.unget()
 			break
 		}
 		s.text.WriteByte(b)

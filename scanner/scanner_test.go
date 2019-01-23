@@ -6,8 +6,6 @@ import (
 	"testing"
 )
 
-// TODO: Add tests for the Pos and End methods.
-
 // scan runs a scanner on input and calls f for each successful s.Next.
 func scan(t *testing.T, input string, f func(i int, s *Scanner)) {
 	t.Helper()
@@ -172,6 +170,36 @@ func TestTokenValues(t *testing.T) {
 			t.Errorf("Token %d [%#q]: Float64 failed: %v", i, s.Text(), err)
 		} else if got != want {
 			t.Errorf("Token %d: Float64: got %v, want %v", i, got, want)
+		}
+	})
+}
+
+func TestPositions(t *testing.T) {
+	// To verify that positions are correct, grab the original text of each
+	// token and compare the corresponding range of the input string to the
+	// token's putative text.
+	const input = `% Test program
+%
+/in{72 mul}def
+newpath 
+  72 %% points
+  72
+moveto (Hello, world\n) show
+`
+	scan(t, input, func(i int, s *Scanner) {
+		pos, end := s.Pos(), s.End()
+		t.Logf("Token %d: type=%d [%d..%d] text=%#q", i, s.Type(), pos, end, s.Text())
+		if pos < 0 || pos > len(input) {
+			t.Errorf("Pos %d is out of range 0..%d", pos, len(input))
+			return
+		}
+		if end < pos || end > len(input) {
+			t.Errorf("End %d is out of range %d..%d", end, pos, len(input))
+			return
+		}
+		got, want := s.Text(), input[pos:end]
+		if got != want {
+			t.Errorf("Got %#q, want %#q", got, want)
 		}
 	})
 }
