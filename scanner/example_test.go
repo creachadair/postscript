@@ -15,7 +15,7 @@ func needsSpace(t scanner.Type) bool {
 	return false
 }
 
-func Example() {
+func ExampleScanner() {
 	s := scanner.New(strings.NewReader(`% Draw a line
 /in { 72 mul } def
 /mt { moveto } def
