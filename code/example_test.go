@@ -15,13 +15,16 @@ func ExampleProgram() {
 		inch.Def,
 		code.NewPath,
 		code.Int(1), inch.Op, code.Int(1), inch.Op, code.MoveTo,
+		code.Name("Helvetica"), code.FindFont,
+		code.Int(16), code.ScaleFont, code.SetFont,
 		code.String("Hello, world!"),
 		code.Show,
+		code.ShowPage,
 	}
 	s.WriteTo(os.Stdout)
 	in, out := s.Stack()
 	fmt.Println("\nin:", in, "out:", out)
 	// Output:
-	// /inch {72 mul} def newpath 1 inch 1 inch moveto (Hello, world!) show
+	// /inch {72 mul} def newpath 1 inch 1 inch moveto /Helvetica findfont 16 scalefont setfont (Hello, world!) show showpage
 	// in: 0 out: 0
 }
