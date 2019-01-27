@@ -76,6 +76,11 @@ func TestSequences(t *testing.T) {
 			String("Hello, World!\n"), Show,
 		}}, 0, 0, "/hello {newpath 72 144 moveto /Helvetica findfont 12 " +
 			"scalefont setfont (Hello, World!\n) show} def"},
+
+		{With{
+			Dict: Seq{Int(2), NDict},
+			Body: Seq{True, Pop},
+		}, 0, 0, "2 dict begin true pop end"},
 	}
 	for _, test := range tests {
 		runTest(t, test.input, test.win, test.wout, test.want)

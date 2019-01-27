@@ -208,6 +208,32 @@ func (f If) WriteTo(w io.Writer) (int64, error) {
 	return seq.WriteTo(w)
 }
 
+// With evaluates a program in the scope of a user dictionary.
+type With struct {
+	Dict Program
+	Body Program
+}
+
+func (b With) Stack() (in, out int) {
+	in, out = b.Dict.Stack()
+	out-- // begin consumes the dictionary
+	bin, bout := b.Body.Stack()
+	return merge(in, out, bin, bout)
+}
+
+func (b With) WriteTo(w io.Writer) (int64, error) {
+	return writeSeq(w, "", "", b.Dict, Begin, b.Body, End)
+}
+
+func merge(ain, aout, bin, bout int) (in, out int) {
+	if bin > aout {
+		t := bin - aout
+		ain += t
+		aout += t
+	}
+	return ain, (aout - bin) + bout
+}
+
 // seqStack computes the stack signature of a sequential composition.
 func seqStack(ps []Program) (in, out int) {
 	if len(ps) == 0 {
@@ -218,12 +244,7 @@ func seqStack(ps []Program) (in, out int) {
 
 	// If the tail of the sequence requires more stack than was left by the
 	// first element, the overage must already exist prior to the composition.
-	if pin > out {
-		t := pin - out
-		in += t
-		out += t
-	}
-	return in, (out - pin) + pout
+	return merge(in, out, pin, pout)
 }
 
 // writeStringTo writes s to w, and adds the number of bytes written to the
