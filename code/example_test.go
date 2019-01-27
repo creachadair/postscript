@@ -12,7 +12,7 @@ func ExampleProgram() {
 		code.Int(72), code.Mul,
 	})
 	s := code.Seq{
-		inch.Def,
+		inch.Defn,
 		code.NewPath,
 		code.Int(1), inch.Op, code.Int(1), inch.Op, code.MoveTo,
 		code.Name("Helvetica"), code.FindFont,

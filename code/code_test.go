@@ -69,8 +69,8 @@ func TestSequences(t *testing.T) {
 			Else: Proc{Mul},
 		}, 2, 1, "false {} {mul} ifelse"},
 
-		{Def{"in", Proc{Int(72), Mul}}, 0, 0, "/in {72 mul} def"},
-		{Def{"hello", Proc{
+		{Defn{"in", Proc{Int(72), Mul}}, 0, 0, "/in {72 mul} def"},
+		{Defn{"hello", Proc{
 			NewPath, Int(72), Int(144), MoveTo,
 			Name("Helvetica"), FindFont, Int(12), ScaleFont, SetFont,
 			String("Hello, World!\n"), Show,

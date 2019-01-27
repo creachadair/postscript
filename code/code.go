@@ -134,8 +134,8 @@ func (o op) WriteTo(w io.Writer) (int64, error) { return writeString(w, o.name) 
 
 // A UserOp represents a named, user-defined operator.
 type UserOp struct {
-	Op  Program // the operator to evaluate
-	Def Def     // the definition of the operation
+	Op   Program // the operator to evaluate
+	Defn Defn    // the definition of the operation
 }
 
 // Define constructs an operator definition from the specified program and a
@@ -148,7 +148,7 @@ func Define(name string, ps Program) UserOp {
 	in, out := seqStack(p)
 	return UserOp{
 		Op: Op(name, in, out),
-		Def: Def{
+		Defn: Defn{
 			Name:  name,
 			Value: ps,
 		},
@@ -156,13 +156,13 @@ func Define(name string, ps Program) UserOp {
 }
 
 // A Def is a program fragment that binds a name to a program.
-type Def struct {
+type Defn struct {
 	Name  string
 	Value Program
 }
 
-func (d Def) Stack() (in, out int)               { return 0, 0 }
-func (d Def) WriteTo(w io.Writer) (int64, error) { return writeSeq(w, "/"+d.Name+" ", " def", d.Value) }
+func (d Defn) Stack() (in, out int)               { return 0, 0 }
+func (d Defn) WriteTo(w io.Writer) (int64, error) { return writeSeq(w, "/"+d.Name+" ", " def", d.Value) }
 
 // If is a conditional expression.
 type If struct {

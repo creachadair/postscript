@@ -46,10 +46,11 @@ var (
 	Put    = Op("put", 3, 0)
 
 	// Data structures
-	NDict  = Op("dict", 1, 1)
 	Begin  = Op("begin", 1, 0)
+	Def    = Op("def", 2, 0)
 	End    = Op("end", 0, 0)
 	NArray = Op("array", 1, 1)
+	NDict  = Op("dict", 1, 1)
 
 	// Relations
 	And   = Op("and", 2, 1)
