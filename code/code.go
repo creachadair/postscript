@@ -141,24 +141,28 @@ type UserOp struct {
 // Define constructs an operator definition from the specified program and a
 // definition program to bind it.
 func Define(name string, ps Program) UserOp {
-	in, out := seqStack([]Program{ps})
+	p := []Program{ps}
+	if proc, ok := ps.(Proc); ok {
+		p = []Program(proc)
+	}
+	in, out := seqStack(p)
 	return UserOp{
 		Op: Op(name, in, out),
 		Def: Def{
-			Name: name,
-			Proc: Proc{ps},
+			Name:  name,
+			Value: ps,
 		},
 	}
 }
 
 // A Def is a program fragment that binds a name to a program.
 type Def struct {
-	Name string
-	Proc Proc
+	Name  string
+	Value Program
 }
 
 func (d Def) Stack() (in, out int)               { return 0, 0 }
-func (d Def) WriteTo(w io.Writer) (int64, error) { return writeSeq(w, "/"+d.Name+" ", " def", d.Proc) }
+func (d Def) WriteTo(w io.Writer) (int64, error) { return writeSeq(w, "/"+d.Name+" ", " def", d.Value) }
 
 // If is a conditional expression.
 type If struct {

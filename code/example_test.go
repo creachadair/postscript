@@ -8,7 +8,7 @@ import (
 )
 
 func ExampleProgram() {
-	inch := code.Define("inch", code.Seq{
+	inch := code.Define("inch", code.Proc{
 		code.Int(72), code.Mul,
 	})
 	s := code.Seq{
