@@ -26,6 +26,9 @@ func TestConstants(t *testing.T) {
 		{String("(a\nb\t(c)\n\nd)"), "(\\(a\nb\\t\\(c\\)\n\nd\\))"},
 		{String("\x00\x01\x02"), `(\000\001\002)`},
 
+		{Name("click"), "/click"},
+		{Var("click"), "click"},
+
 		{Bytes(nil), "<~~>"},
 		{Bytes{}, "<~~>"},
 		{Bytes("foo"), `<~AoDS~>`},

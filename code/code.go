@@ -90,8 +90,14 @@ func (s String) WriteTo(w io.Writer) (int64, error) {
 // A Name is a quoted name, whose execution is deferred.
 type Name string
 
-func (q Name) Stack() (int, int)                  { return 0, 1 }
+func (q Name) Stack() (in, out int)               { return 0, 1 }
 func (q Name) WriteTo(w io.Writer) (int64, error) { return writeString(w, "/"+string(q)) }
+
+// A Var is a variable reference.
+type Var string
+
+func (v Var) Stack() (in, out int)               { return 0, 1 }
+func (v Var) WriteTo(w io.Writer) (int64, error) { return writeString(w, string(v)) }
 
 // Bytes is a binary data constant Program.
 type Bytes []byte
