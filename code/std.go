@@ -18,6 +18,7 @@ var (
 
 	// Control
 	Exit = Op("exit", 0, 0)
+	For  = Op("for", 4, 0)
 
 	// Arithmetic
 	Abs      = Op("abs", 1, 1)
