@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"bitbucket.org/creachadair/postscript/scanner"
+	"github.com/creachadair/postscript/scanner"
 )
 
 func needsSpace(t scanner.Type) bool {
