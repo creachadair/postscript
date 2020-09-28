@@ -63,7 +63,7 @@ func scan(w io.Writer, r io.ReadCloser) error {
 		if cur == scanner.Comment {
 			continue
 		}
-		if needsSpace(last, cur) {
+		if scanner.NeedSpaceBetween(last, cur) {
 			io.WriteString(w, " ")
 		}
 		io.WriteString(w, s.Text())
@@ -75,30 +75,3 @@ func scan(w io.Writer, r io.ReadCloser) error {
 	}
 	return s.Err()
 }
-
-const numTypes = scanner.Right + 1
-
-// A mapping of pairs of token types that need whitespace to separate them.
-// Given types x and y, spaces[x][y] == true if x followed by y requires space.
-var spaces = [numTypes][numTypes]bool{
-	scanner.Decimal: {
-		scanner.Decimal: true, scanner.Radix: true, scanner.Real: true, scanner.Name: true,
-	},
-	scanner.Radix: {
-		scanner.Decimal: true, scanner.Radix: true, scanner.Real: true, scanner.Name: true,
-	},
-	scanner.Real: {
-		scanner.Decimal: true, scanner.Radix: true, scanner.Real: true, scanner.Name: true,
-	},
-	scanner.Name: {
-		scanner.Decimal: true, scanner.Radix: true, scanner.Real: true, scanner.Name: true,
-	},
-	scanner.QuotedName: {
-		scanner.Decimal: true, scanner.Radix: true, scanner.Real: true, scanner.Name: true,
-	},
-	scanner.ImmediateName: {
-		scanner.Decimal: true, scanner.Radix: true, scanner.Real: true, scanner.Name: true,
-	},
-}
-
-func needsSpace(prev, cur scanner.Type) bool { return spaces[prev][cur] }

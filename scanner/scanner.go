@@ -41,6 +41,8 @@ const (
 	ImmediateName             // an immediate name: //foo
 	Left                      // a left bracket: {
 	Right                     // a right bracket: }
+
+	numTypes
 )
 
 // New constructs a *Scanner that reads from r.
@@ -495,3 +497,18 @@ func isSpecial(b byte) bool {
 	}
 	return false
 }
+
+// A mapping of pairs of token types that need whitespace to separate them.
+// Given types x and y, spaces[x][y] == true if x followed by y requires space.
+var spaces = [numTypes][numTypes]bool{
+	Decimal:       {Decimal: true, Radix: true, Real: true, Name: true},
+	Radix:         {Decimal: true, Radix: true, Real: true, Name: true},
+	Real:          {Decimal: true, Radix: true, Real: true, Name: true},
+	Name:          {Decimal: true, Radix: true, Real: true, Name: true},
+	QuotedName:    {Decimal: true, Radix: true, Real: true, Name: true},
+	ImmediateName: {Decimal: true, Radix: true, Real: true, Name: true},
+}
+
+// NeedSpaceBetween reports whether spaces are required between a token of type
+// prev and a token of type next to preserve lexical structure.
+func NeedSpaceBetween(prev, next Type) bool { return spaces[prev][next] }
