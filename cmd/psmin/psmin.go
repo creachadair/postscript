@@ -20,8 +20,7 @@ var (
 
 func init() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, `
-Usage: %[1]s               # read from stdin
+		fmt.Fprintf(os.Stderr, `Usage: %[1]s               # read from stdin
        %[1]s filename...   # read from files
 
 Read PostScript source text from the specified files, and write
