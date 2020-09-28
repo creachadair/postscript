@@ -13,6 +13,11 @@ import (
 	"github.com/creachadair/postscript/scanner"
 )
 
+var (
+	keepLeading = flag.Bool("keep-leading-comments", false,
+		"Keep comments prior to the first non-comment token")
+)
+
 func init() {
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, `
@@ -26,6 +31,7 @@ With no arguments, read from stdin.
 Use "-" as a filename to read from stdin among other files.
 If multiple files are named, their contents are concatenated.
 
+Options:
 `, filepath.Base(os.Args[0]))
 		flag.PrintDefaults()
 	}
@@ -57,14 +63,23 @@ func scan(w io.Writer, r io.ReadCloser) error {
 	defer r.Close()
 	s := scanner.New(r)
 
+	var pastHead bool
 	var last scanner.Type
 	for s.Next() == nil {
 		cur := s.Type()
 		if cur == scanner.Comment {
-			continue
+			if pastHead || !*keepLeading {
+				continue
+			}
+		} else {
+			pastHead = true
 		}
 		if scanner.NeedSpaceBetween(last, cur) {
-			io.WriteString(w, " ")
+			if last == scanner.Comment {
+				io.WriteString(w, "\n")
+			} else {
+				io.WriteString(w, " ")
+			}
 		}
 		io.WriteString(w, s.Text())
 		last = cur
