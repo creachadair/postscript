@@ -16,7 +16,7 @@ import (
 // A Scanner consumes PostScript tokens from an input stream.  Use the Next
 // method to parse tokens sequentially from the input.
 type Scanner struct {
-	input    *bufio.Reader // the unconumed input
+	input    *bufio.Reader // the unconsumed input
 	text     *bytes.Buffer // the text of the current token
 	err      error         // the last non-nil error reported
 	token    Type          // the type of the current token
