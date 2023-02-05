@@ -1,3 +1,3 @@
 module github.com/creachadair/postscript
 
-go 1.18
+go 1.19
